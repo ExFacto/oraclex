@@ -1,0 +1,35 @@
+Problems: 
+
+Unsolvable: 
+- We can't have users sign with any library other than bitcoinex, because no one
+can take a PSBT and create an adaptor sig from it. 
+
+
+I dont know how:
+- set up PHX web w/ CSS
+
+Optimal path: 
+- Use CLI tool? 
+
+
+ACtions:
+- Declare initial coin
+     - Initial coin:
+        - Address currently in
+        - Txid:vout of coin
+        - amount 
+
+- Decalre funding pubkey & Amount
+
+- Declare settlement address
+
+- Accept Funding TX, Counterparty Pubkey, verify script
+
+- Accept & Sign CET TXs, send back Adaptor Signatures
+
+- Receive Counterparty Adaptor Sigs & Verify them
+
+- Receive Oracle Resolution & Extract key & Decrypt signatures
+
+- Broadcast Bitcoin Tx / send to server
+
