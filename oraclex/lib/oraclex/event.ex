@@ -44,17 +44,24 @@ defmodule Oraclex.Oracle.Event do
     }
   end
 
+  def get_outcome_sighash(%__MODULE__{outcomes: outcomes}, idx) do
+    outcomes
+    |> Enum.at(idx)
+    |> Bitcoinex.Utils.double_sha256()
+    |> :binary.decode_unsigned()
+  end
+
   @type resolution :: %{
     pubkey: Point.t(),
     signature: Signature.t(),
     outcome: String.t()
   }
 
-  def resolve(oracle, signature, outcome) do
+  def resolve(event, outcome_idx, oracle, signature) do
     %{
       pubkey: oracle.pk,
       signature: signature,
-      outcome: outcome
+      outcome: Enum.at(event, outcome_idx)
     }
   end
 

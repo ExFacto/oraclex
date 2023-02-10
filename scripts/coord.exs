@@ -111,7 +111,7 @@ eagles_cet = %Transaction{
   version: 1,
   inputs: [
     %Transaction.In{
-      prev_txid: fund_txid,
+    prev_txid: fund_txid,
       prev_vout: fund_vout,
       script_sig: "",
       sequence_no: 2147483648,
@@ -179,9 +179,5 @@ chiefs_cet_sighash = Transaction.bip341_sighash(
   tapleaf: fund_leaf
 ) |> :binary.decode_unsigned()
 
-
-# SHARE with alice & bob
-eagles_cet_sighash
-chiefs_cet_sighash
 
 end

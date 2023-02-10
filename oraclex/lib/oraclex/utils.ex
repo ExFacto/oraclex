@@ -3,6 +3,7 @@ defmodule Oraclex.Utils do
   alias Bitcoinex.{PrivateKey, Secp256k1}
 
 
+  @type outpoint :: {String.t(), non_neg_integer()}
 
 
   defp new_rand_int() do

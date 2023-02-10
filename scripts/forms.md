@@ -1,9 +1,39 @@
-
-form 1: Initial info 
+1. RECV Join Offer x2
+2. RECV Pick Coin x2
     - Initial coin:
         - Address currently in
         - Txid:vout of coin
         - amount 
+3. RECV Provide Funding Pubkey & Amount
+    - amount to put in
+    - funding pubkey
+
+4. RECV Provide Settlement Destination
+
+5. SEND Bet Summary
+    The Bet:
+    - Amounts into funding
+    - Winner Gets
+    - Fee paid to fund
+    - Fee paid to settle
+
+6. SEND Funding TX (unsigned) & r 
+
+7. SEND CETs (unsigned)
+
+8. RECV Adaptor Sigs for CETs from parties 2x 2 sigs
+
+9. SEND adaptor Sigs to counterparties
+
+10. RECV Funding Sigs
+
+11. SEND/Broadcast Funding TX
+
+12. SEND Resolution Announcement
+
+
+
+form 1: Initial info
     - Funding:
         - amount to put in
         - funding pubkey
