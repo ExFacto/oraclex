@@ -1,6 +1,9 @@
 defmodule Oraclex.Coordinator do
   alias Oraclex.Oracle
   alias Oraclex.Oracle.{Announcement, Resolution}
+  alias Bitcoinex.{Script}
+  alias Bitcoinex.Secp256k1.{Point}
+
 
   @spec handle_maker(Announcement.t(), non_neg_integer(), non_neg_integer(), {String.t(), String.t(), non_neg_integer(), non_neg_integer(), String.t()})
   def handle_maker(oracle_announcement, fund_fee, cet_fee, {prev_outpoint, prev_address, prev_amount, fund_pubkey, fund_amount, dest_address}) do
@@ -15,6 +18,7 @@ defmodule Oraclex.Coordinator do
     # send bet summary back to maker
   end
 
+  @spec handle_taker({String.t(), String.t(), non_neg_integer(), non_neg_integer(), String.t()})
   def handle_taker({prev_outpoint, prev_address, prev_amount, fund_pubkey, fund_amount, dest_address}) do
     {prev_txid, prev_vout, prev_scriptpubkey, prev_amount} = handle_input_coin_info(prev_outpoint, prev_address, prev_amount)
     {fund_pk, fund_amount} = handle_funding_info(fund_pubkey, fund_amount)
@@ -61,6 +65,20 @@ defmodule Oraclex.Coordinator do
     }
   end
 
+  #  HELPER FUNCS
+  @spec multisig_2_of_2_script(Point.t(), Point.t()) :: Script.t()
+  def multisig_2_of_2_script(a, b) ->
+    # Script will be pseudo-multisig:
+    # <BOB_PK> OP_CHECKSIGVERIFY <ALICE_PK> OP_CHECKSIG
+    # Scripts are stacks, so must be inserted in reverse order.
+    # This also means Alices Signature must come first in the witness_script
+    s = Script.new()
+    {:ok, s} = Script.push_op(s, :op_checksig)
+    {:ok, s} = Script.push_data(s, Point.x_bytes(a))
+    {:ok, s} = Script.push_op(s, :op_checksigverify)
+    {:ok, s} = Script.push_data(s, Point.x_bytes(b))
+    s
+  end
 
 
 end
