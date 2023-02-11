@@ -4,18 +4,32 @@ defmodule Oraclex.Coordinator do
   alias Bitcoinex.{Script, Transaction}
   alias Bitcoinex.Secp256k1.{Point}
 
-
   @type contract :: %{
-    event
-  }
+          event: any()
+        }
 
   # steps 1-4 of forms.md
-  @spec handle_maker(Event.announcement(), String.t(), non_neg_integer(), non_neg_integer(), {String.t(), String.t(), non_neg_integer(), non_neg_integer(), String.t()})
-  def handle_maker(oracle_announcement, maker_outcome, fund_fee, cet_fee, {prev_outpoint, prev_address, prev_amount, fund_pubkey, fund_amount, dest_address}) do
+  @spec handle_maker(
+          Event.announcement(),
+          String.t(),
+          non_neg_integer(),
+          non_neg_integer(),
+          {String.t(), String.t(), non_neg_integer(), non_neg_integer(), String.t()}
+        ) :: any()
+  def handle_maker(
+        oracle_announcement,
+        maker_outcome,
+        fund_fee,
+        cet_fee,
+        {prev_outpoint, prev_address, prev_amount, fund_pubkey, fund_amount, dest_address}
+      ) do
     # TODO maker_outcome must be an announcement outcome
-    {prev_txid, prev_vout, prev_scriptpubkey, prev_amount} = handle_input_coin_info(prev_outpoint, prev_address, prev_amount)
+    {prev_txid, prev_vout, prev_scriptpubkey, prev_amount} =
+      handle_input_coin_info(prev_outpoint, prev_address, prev_amount)
+
     {fund_pk, fund_amount} = handle_funding_info(fund_pubkey, fund_amount)
-    dest_script = handle_settlement_info(dest_address)
+    ## TODO: dest_address
+    # dest_script = handle_settlement_info(nil)
 
     change_amount = prev_amount - fund_amount - fund_fee
     winner_amount = fund_amount - cet_fee
@@ -25,11 +39,18 @@ defmodule Oraclex.Coordinator do
   end
 
   # TODO probably need someway to specific which offer to take
-  @spec handle_taker({String.t(), String.t(), non_neg_integer(), non_neg_integer(), String.t()})
-  def handle_taker(oracle_announcement, taker_outcome, {prev_outpoint, prev_address, prev_amount, fund_pubkey, fund_amount, dest_address}) do
-    {prev_txid, prev_vout, prev_scriptpubkey, prev_amount} = handle_input_coin_info(prev_outpoint, prev_address, prev_amount)
+  # @spec handle_taker({String.t(), String.t(), non_neg_integer(), non_neg_integer(), String.t()}) ::
+  #         any()
+  def handle_taker(
+        oracle_announcement,
+        taker_outcome,
+        {prev_outpoint, prev_address, prev_amount, fund_pubkey, fund_amount, dest_address}
+      ) do
+    {prev_txid, prev_vout, prev_scriptpubkey, prev_amount} =
+      handle_input_coin_info(prev_outpoint, prev_address, prev_amount)
+
     {fund_pk, fund_amount} = handle_funding_info(fund_pubkey, fund_amount)
-    dest_script = handle_settlement_info(dest_address)
+    # dest_script = handle_settlement_info(dest_address)
     true
     # Notify both maker & taker with bet summary & Funding TX, r, & CETs
   end
@@ -39,20 +60,25 @@ defmodule Oraclex.Coordinator do
     # Should we use optional names or label first Maker and second Taker
   end
 
-  @spec handle_input_coin_info(String.t(), String.t(), String.t()) :: {outpoint(), Transaction.Out.t()}
-  defp handle_input_coin_info(prev_outpoint, prev_address,  prev_amount) do
+  @spec handle_input_coin_info(String.t(), String.t(), String.t()) ::
+          {any(), Transaction.Out.t()}
+  defp handle_input_coin_info(prev_outpoint, prev_address, prev_amount) do
     # TODO: how should we set app-wide network & check against returned network
     {:ok, prev_scriptpubkey, _network} = Script.from_address(String.trim(prev_address))
     [prev_txid, vout] = String.split(String.trim(prev_outpoint), ":")
     prev_vout = String.to_integer(vout)
     prev_amount = String.to_integer(String.trim(prev_amount))
-    {{prev_txid, prev_vout}, %Transaction.Out{script_pub_key: prev_scriptpubkey, value: prev_amount}}
+
+    {{prev_txid, prev_vout},
+     %Transaction.Out{script_pub_key: prev_scriptpubkey, value: prev_amount}}
   end
 
   defp handle_funding_info(pubkey, amount) do
     amount = String.to_integer(amount)
+
     case Point.lift_x(pubkey) do
-      {:error, msg} -> {:error, msg}
+      {:error, msg} ->
+        {:error, msg}
 
       {:ok, pk} ->
         {pk, amount}
@@ -66,17 +92,25 @@ defmodule Oraclex.Coordinator do
   end
 
   def send_bet_summary() do
-    %{
-      fund_amount: fund_amount,
-      winner_gets: winner_amount,
-      outcomes: event.outcomes,
-      dest_scripts: dest_scripts
-    }
+    # %{
+    #   fund_amount: fund_amount,
+    #   winner_gets: winner_amount,
+    #   outcomes: event.outcomes,
+    #   dest_scripts: dest_scripts
+    # }
+    %{}
   end
 
   # steps 6-7 of forms.md
 
-  def send_funding_tx_info(prev_outputs, outpoints, alice_fund_pk, bob_fund_pk, fund_amount, change_outputs) do
+  def send_funding_tx_info(
+        prev_outputs,
+        outpoints,
+        alice_fund_pk,
+        bob_fund_pk,
+        fund_amount,
+        change_outputs
+      ) do
     # FUTURE USE alice_prev_out = Enum.at(prev_outputs, 0)
     # FUTURE USE bob_prev_out = Enum.at(prev_outputs, 1)
     # FUTURE USE # TODO put this in the PSBT
@@ -95,15 +129,16 @@ defmodule Oraclex.Coordinator do
     ]
 
     # construct funding output
-    fund_output = build_funding_output(alice_fund_pk, bob_fund_pk, fund_amount)
+    ## TODO: support building funding output
+    # fund_output = build_funding_output(alice_fund_pk, bob_fund_pk, fund_amount)
 
-    outputs = [fund_output | change_outputs]
+    outputs = [nil | change_outputs]
 
     tx = build_tx(inputs, outputs)
 
-
     # Share fund_tx with Alice & Bob for later
-    fund_txid = Transaction.transaction_id(fund_tx)
+    # TODO: get fund_tx arg
+    fund_txid = Transaction.transaction_id(nil)
     fund_vout = 0
 
     fund_outpoint = {fund_txid, fund_vout}
@@ -114,18 +149,22 @@ defmodule Oraclex.Coordinator do
 
   @spec build_funding_output(Point.t(), Point.t()) :: {:ok, Script.t(), non_neg_integer()}
   defp build_funding_output(alice_fund_pk, bob_fund_pk) do
+    multisig_2_of_2_script = fn _, _ -> "" end
     fund_script = multisig_2_of_2_script.(alice_fund_pk, bob_fund_pk)
     fund_leaf = Taproot.TapLeaf.new(Taproot.bip342_leaf_version(), fund_script)
     {:ok, fund_scriptpubkey, r} = Script.create_p2tr_script_only(fund_leaf, Utils.new_rand_int())
-    %Transaction.Out{value: fund_amount, script_pub_key: Script.to_hex(fund_scriptpubkey)}
+    ## TODO: fund_amount
+    %Transaction.Out{value: nil, script_pub_key: Script.to_hex(fund_scriptpubkey)}
   end
 
-  def send_cets(fund_outpoint, winner_amount, outcomes, dest_scripts) when length(outcomes) == length(dest_scripts)  do
-    cets = build_all_cets(fund_outpoint, winner_amount, Enum.zip(outcomes, dest_scripts))
+  def send_cets(fund_outpoint, winner_amount, outcomes, dest_scripts)
+      when length(outcomes) == length(dest_scripts) do
+    ## TODO: implment build_all_certs/3
+    # cets = build_all_cets(fund_outpoint, winner_amount, Enum.zip(outcomes, dest_scripts))
     # return map to client to be stored until resolution comes
   end
 
-  defp build_all_cets{fund_outpoint, winner_amount, outcomes_scripts} do
+  defp build_all_cets({fund_outpoint, winner_amount, outcomes_scripts}) do
     # map of outcome -> CET
     Enum.reduce(outcomes_scripts, %{}, fn {outcome, script}, acc ->
       %{acc | outcome => build_cet(fund_outpoint, winner_amount, script)}
@@ -136,9 +175,10 @@ defmodule Oraclex.Coordinator do
     cet_hash_type = 0x00
 
     inputs = [build_input(fund_txid, fund_vout)]
-    outputs = [%Transaction.Out{value: winner_amount, Script.to_hex(dest_script)}]
+    outputs = [%Transaction.Out{value: winner_amount, script_pub_key: Script.to_hex(dest_script)}]
 
-    build_tx(fund_input, outputs)
+    # TODO: get found_input arg
+    build_tx(nil, outputs)
   end
 
   #  HELPER FUNCS
@@ -148,8 +188,8 @@ defmodule Oraclex.Coordinator do
       prev_txid: txid,
       prev_vout: vout,
       script_sig: "",
-      sequence_no: 2147483648
-    },
+      sequence_no: 2_147_483_648
+    }
   end
 
   defp build_tx(inputs, outputs) do
@@ -162,7 +202,7 @@ defmodule Oraclex.Coordinator do
   end
 
   @spec multisig_2_of_2_script(Point.t(), Point.t()) :: Script.t()
-  def multisig_2_of_2_script(a, b) ->
+  def multisig_2_of_2_script(a, b) do
     # Script will be pseudo-multisig:
     # <BOB_PK> OP_CHECKSIGVERIFY <ALICE_PK> OP_CHECKSIG
     # Scripts are stacks, so must be inserted in reverse order.
@@ -174,6 +214,4 @@ defmodule Oraclex.Coordinator do
     {:ok, s} = Script.push_data(s, Point.x_bytes(b))
     s
   end
-
-
 end

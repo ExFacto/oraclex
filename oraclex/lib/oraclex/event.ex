@@ -1,10 +1,11 @@
 defmodule Oraclex.Oracle.Event do
-
   @type t :: %__MODULE__{
-    nonce: PrivateKey.t(),
-    nonce_point: Point.t(),
-    outcomes: list(String.t())
-  }
+          nonce: PrivateKey.t(),
+          nonce_point: Point.t(),
+          outcomes: list(String.t())
+        }
+
+  defstruct [:nonce, :nonce_point, :outcomes]
 
   @spec new_event(list(String.t())) :: t()
   def new_event(outcomes) do
@@ -19,26 +20,27 @@ defmodule Oraclex.Oracle.Event do
   end
 
   @type announcement :: %{
-    pubkey: Point.t(),
-    public_nonce: Point.t(),
-    outcomes: list(String.t())
-  }
+          pubkey: Point.t(),
+          public_nonce: Point.t(),
+          outcomes: list(String.t())
+        }
 
   @spec calculate_all_signature_points(announcement()) :: list(Point.t())
   def calculate_all_signature_points(%{pubkey: pk, public_nonce: r_point, outcomes: outcomes}) do
-    Enum.map(outcomes, fn outcome -> calculate_all_signature_points(pk, r_point, outcome) end)
+    # Enum.map(outcomes, fn outcome -> calculate_all_signature_points(pk, r_point, outcome) end)
+    []
   end
 
-  @spec calculate_signature_point(Point.t(), Point.t(), String.t())
+  @spec calculate_signature_point(Point.t(), Point.t(), String.t()) :: any()
   def calculate_signature_point(pk, r_point, outcome) do
-      z = Bitcoinex.Utils.double_sha256(outcome)
-      Schnorr.calculate_signature_point(r_point, pk, z)
+    z = Bitcoinex.Utils.double_sha256(outcome)
+    Schnorr.calculate_signature_point(r_point, pk, z)
   end
 
   @spec announce(Oraclex.Oracle.t(), t()) :: announcement()
   def announce(oracle, event) do
     %{
-      pubkey: oracle.pk
+      pubkey: oracle.pk,
       public_nonce: event.nonce_point,
       outcomes: event.outcomes
     }
@@ -52,10 +54,10 @@ defmodule Oraclex.Oracle.Event do
   end
 
   @type resolution :: %{
-    pubkey: Point.t(),
-    signature: Signature.t(),
-    outcome: String.t()
-  }
+          pubkey: Point.t(),
+          signature: Signature.t(),
+          outcome: String.t()
+        }
 
   def resolve(event, outcome_idx, oracle, signature) do
     %{
@@ -65,6 +67,5 @@ defmodule Oraclex.Oracle.Event do
     }
   end
 
-  def get_secret_from_resolution(%{signature: %Signature{s: s}}), do: PrivateKey.new(s)
-
+  def get_secret_from_resolution(%{signature: %{s: s}}), do: PrivateKey.new(s)
 end
