@@ -9,7 +9,7 @@ defmodule Oraclex.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      Oraclex.Repo,
+      # Oraclex.Repo,
       # Start the Telemetry supervisor
       OraclexWeb.Telemetry,
       # Start the PubSub system

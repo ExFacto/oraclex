@@ -1,3 +1,5 @@
 .env
 .elixir_ls
 priv
+
+/client/oracle_client/burrito_out/
