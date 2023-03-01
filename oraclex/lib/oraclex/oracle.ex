@@ -2,9 +2,9 @@ defmodule Oraclex.Oracle do
   alias Oraclex.Oracle.Utils
 
   @type t :: %__MODULE__{
-    sk: PrivateKey.t(),
-    pk: Point.t(),
-  }
+          sk: PrivateKey.t(),
+          pk: Point.t()
+        }
 
   @enforce_keys [:sk]
 
@@ -30,4 +30,17 @@ defmodule Oraclex.Oracle do
     Event.resolve(event, outcome_idx, oracle, sig)
   end
 
+  # DLCSpec
+
+  def attestation_sighash(attestation), do: oracle_tagged_hash(attestation, "attestation/v0")
+
+  def oracle_tagged_hash(msg, tag) do
+    sighash = Utils.tagged_hash("DLC/oracle/#{tag}", msg) |> :binary.decode_unsigned()
+  end
+
+  def sign_attestation(msg, sk) do
+    aux = Utils.new_rand_int()
+    sighash = attestation_sighash(msg)
+    Schnorr.sign(sk, sighash, aux)
+  end
 end

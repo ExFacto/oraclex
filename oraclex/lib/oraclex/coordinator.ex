@@ -4,9 +4,23 @@ defmodule Oraclex.Coordinator do
   alias Bitcoinex.{Script, Transaction}
   alias Bitcoinex.Secp256k1.{Point}
 
+  @default_tx_version 2
+  @default_sequence 2_147_483_648
+  @cet_sequence 0xFFFFFFFE
+
   @type contract :: %{
           event: any()
         }
+
+  def handle_new_oracle(name, oracle_info) do
+    # save oracle pubkey
+    {name, pubkey}
+  end
+
+  def handle_new_client(client_name) do
+    # Send full list of outstanding offers
+    nil
+  end
 
   # steps 1-4 of forms.md
   @spec handle_maker(
@@ -55,11 +69,6 @@ defmodule Oraclex.Coordinator do
     # Notify both maker & taker with bet summary & Funding TX, r, & CETs
   end
 
-  defp handle_join_offer() do
-    # TODO we must ensure only 2 people join an offer.
-    # Should we use optional names or label first Maker and second Taker
-  end
-
   @spec handle_input_coin_info(String.t(), String.t(), String.t()) ::
           {any(), Transaction.Out.t()}
   defp handle_input_coin_info(prev_outpoint, prev_address, prev_amount) do
@@ -91,14 +100,13 @@ defmodule Oraclex.Coordinator do
     dest_script
   end
 
-  def send_bet_summary() do
-    # %{
-    #   fund_amount: fund_amount,
-    #   winner_gets: winner_amount,
-    #   outcomes: event.outcomes,
-    #   dest_scripts: dest_scripts
-    # }
-    %{}
+  def send_bet_summary(fund_amount, winner_amount, event, dest_scripts) do
+    %{
+      fund_amount: fund_amount,
+      winner_gets: winner_amount,
+      outcomes: event.outcomes,
+      dest_scripts: dest_scripts
+    }
   end
 
   # steps 6-7 of forms.md
@@ -188,30 +196,39 @@ defmodule Oraclex.Coordinator do
       prev_txid: txid,
       prev_vout: vout,
       script_sig: "",
-      sequence_no: 2_147_483_648
+      sequence_no: @default_sequence
     }
   end
 
-  defp build_tx(inputs, outputs) do
+  defp build_tx(inputs, outputs, locktime \\ 0) do
     %Transaction{
-      version: 1,
+      version: @default_tx_version,
       inputs: inputs,
       outputs: outputs,
-      lock_time: 0
+      lock_time: locktime
     }
   end
 
-  @spec multisig_2_of_2_script(Point.t(), Point.t()) :: Script.t()
-  def multisig_2_of_2_script(a, b) do
-    # Script will be pseudo-multisig:
-    # <BOB_PK> OP_CHECKSIGVERIFY <ALICE_PK> OP_CHECKSIG
-    # Scripts are stacks, so must be inserted in reverse order.
-    # This also means Alices Signature must come first in the witness_script
+  # TODO sort lexicographically
+  @spec multisig_m_of_n_script(non_neg_integer())
+  def multisig_m_of_n_script(m, pubkeys) when length(pubkeys) > 1 and m <= length(pubkeys) do
+    # standard multisig from BIP342: https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki#cite_note-5
+    # <pubkey_1> CHECKSIG <pubkey_2> CHECKSIGADD ... <pubkey_n> CHECKSIGADD m NUMEQUAL
     s = Script.new()
+    {:ok, s} = Script.push_op(:op_numequal)
+    {:ok, s} = Script.push_op(s, m)
+    add_pubkeys_to_multisig_script(s, pubkeys)
+  end
+
+  def add_pubkeys_to_multisig_script(s, [pk]) do
     {:ok, s} = Script.push_op(s, :op_checksig)
-    {:ok, s} = Script.push_data(s, Point.x_bytes(a))
-    {:ok, s} = Script.push_op(s, :op_checksigverify)
-    {:ok, s} = Script.push_data(s, Point.x_bytes(b))
+    {:ok, s} = Script.push_data(s, pk)
     s
+  end
+
+  def add_pubkeys_to_multisig_script(s, [pk | pubkeys]) do
+    {:ok, s} = Script.push_op(s, :op_checksigadd)
+    {:ok, s} = Script.push_data(s, pk)
+    add_pubkeys_to_multisig_script(s, pubkeys)
   end
 end

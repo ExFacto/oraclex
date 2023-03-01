@@ -1,8 +1,10 @@
 defmodule Oraclex.Oracle.Event do
   @type t :: %__MODULE__{
-          nonce: PrivateKey.t(),
-          nonce_point: Point.t(),
-          outcomes: list(String.t())
+          event_id: String.t(),
+          nonces: list(PrivateKey.t()),
+          nonce_points: list(Point.t()),
+          outcomes: list(String.t()),
+          attestation_time: integer()
         }
 
   defstruct [:nonce, :nonce_point, :outcomes]
@@ -49,7 +51,7 @@ defmodule Oraclex.Oracle.Event do
   def get_outcome_sighash(%__MODULE__{outcomes: outcomes}, idx) do
     outcomes
     |> Enum.at(idx)
-    |> Bitcoinex.Utils.double_sha256()
+    |> Oraclex.Oracle.attestation_sighash()
     |> :binary.decode_unsigned()
   end
 
@@ -68,4 +70,14 @@ defmodule Oraclex.Oracle.Event do
   end
 
   def get_secret_from_resolution(%{signature: %{s: s}}), do: PrivateKey.new(s)
+
+  # SERIALIZERS
+  @msg_type_oracle_event 55330
+  @msg_type_oracle_announcement 55332
+  def serialize_announcement(signature, pubkey, event) do
+    {:ok, ser_event} = Oracle.serialize(event)
+
+    <<@msg_type_oracle_announcement>> <>
+      Signature.serialize_signature() <> Point.x_bytes(pubkey) <> ser_event
+  end
 end
