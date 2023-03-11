@@ -1,0 +1,23 @@
+{
+  "treat_no_relevant_lines_as_covered": true,
+  "coverage_options": {
+    "output_dir": "priv/static/doc/cover/",
+    "minimum_coverage": 85
+  },
+  "terminal_options": {
+    "file_column_width": 60
+  },
+  "skip_files": [
+    "lib/oraclex/application.ex",
+    "lib/oraclex/mailer.ex",
+    "lib/oraclex/repo.ex",
+    "lib/oraclex/schema.ex",
+    "lib/oraclex_web.ex",
+    "lib/oraclex_web/endpoint.ex",
+    "lib/oraclex_web/gettext.ex",
+    "lib/oraclex_web/router.ex",
+    "lib/oraclex_web/telemetry.ex",
+    "lib/oraclex_web/views",
+    "test"
+  ]
+}
