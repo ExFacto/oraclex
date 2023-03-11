@@ -1,83 +1,81 @@
-defmodule Oraclex.Oracle.Event do
+defmodule Oraclex.Event do
   @type t :: %__MODULE__{
-          event_id: String.t(),
-          nonces: list(PrivateKey.t()),
+          id: String.t(),
           nonce_points: list(Point.t()),
-          outcomes: list(String.t()),
-          attestation_time: integer()
+          descriptor: event_descriptor(),
+          maturity_epoch: non_neg_integer()
         }
 
-  defstruct [:nonce, :nonce_point, :outcomes]
+  defstruct [
+    :id,
+    :nonce_points,
+    :descriptor,
+    :maturity_epoch
+  ]
 
-  @spec new_event(list(String.t())) :: t()
-  def new_event(outcomes) do
-    oracle_event_nonce = Utils.new_privkey()
-    event_nonce_point = PrivateKey.to_point(oracle_event_nonce)
-
+  # @spec new(list(String.t())) :: t()
+  def new(event_id, nonce_points, descriptor, maturity_epoch) do
     %__MODULE__{
-      nonce: oracle_event_nonce,
-      nonce_point: event_nonce_point,
+      id: event_id,
+      nonce_points: nonce_points,
+      descriptor: descriptor,
+      maturity_epoch: maturity_epoch
+    }
+  end
+
+  def serialize(event) do
+    {ct, ser_nonces} = Utils.serialize_with_count(event.nonces, &Point.x_bytes/1)
+
+    Messaging.ser(ct, :u16) <>
+      ser_nonces <>
+      Messaging.ser(event.maturity_epoch, :u32) <>
+      serialize_event_descriptor(event.descriptor) <>
+      Messaging.ser(event.id, :utf8)
+  end
+
+  @type event_descriptor :: %{
+    outcomes: list(String.t())
+  }
+
+  def new_event_descriptor(outcomes) do
+    %{
       outcomes: outcomes
     }
   end
 
-  @type announcement :: %{
-          pubkey: Point.t(),
-          public_nonce: Point.t(),
-          outcomes: list(String.t())
-        }
-
-  @spec calculate_all_signature_points(announcement()) :: list(Point.t())
-  def calculate_all_signature_points(%{pubkey: pk, public_nonce: r_point, outcomes: outcomes}) do
-    # Enum.map(outcomes, fn outcome -> calculate_all_signature_points(pk, r_point, outcome) end)
-    []
+  def serialize_event_descriptor(descriptor) do
+    {ct, ser_outcomes} = Utils.serialize_with_count(descriptor.outcomes, &Messaging.serialize_outcome/1)
+    Messaging.ser(ct, :u16) <> ser_outcomes
   end
 
-  @spec calculate_signature_point(Point.t(), Point.t(), String.t()) :: any()
-  def calculate_signature_point(pk, r_point, outcome) do
-    z = Bitcoinex.Utils.double_sha256(outcome)
-    Schnorr.calculate_signature_point(r_point, pk, z)
-  end
+  # OLD
 
-  @spec announce(Oraclex.Oracle.t(), t()) :: announcement()
-  def announce(oracle, event) do
-    %{
-      pubkey: oracle.pk,
-      public_nonce: event.nonce_point,
-      outcomes: event.outcomes
-    }
-  end
+  # @spec calculate_all_signature_points(attestation()) :: list(Point.t())
+  # def calculate_all_signature_points(%{pubkey: pk, public_nonce: r_point, outcomes: outcomes}) do
+  #   # Enum.map(outcomes, fn outcome -> calculate_all_signature_points(pk, r_point, outcome) end)
+  #   []
+  # end
 
-  def get_outcome_sighash(%__MODULE__{outcomes: outcomes}, idx) do
-    outcomes
-    |> Enum.at(idx)
-    |> Oraclex.Oracle.attestation_sighash()
-    |> :binary.decode_unsigned()
-  end
+  # @spec calculate_signature_point(Point.t(), Point.t(), String.t()) :: any()
+  # def calculate_signature_point(pk, r_point, outcome) do
+  #   z = Bitcoinex.Utils.double_sha256(outcome)
+  #   Schnorr.calculate_signature_point(r_point, pk, z)
+  # end
 
-  @type resolution :: %{
-          pubkey: Point.t(),
-          signature: Signature.t(),
-          outcome: String.t()
-        }
+  # def get_outcome_sighash(%__MODULE__{outcomes: outcomes}, idx) do
+  #   outcomes
+  #   |> Enum.at(idx)
+  #   |> Oraclex.Oracle.attestation_sighash()
+  #   |> :binary.decode_unsigned()
+  # end
 
-  def resolve(event, outcome_idx, oracle, signature) do
-    %{
-      pubkey: oracle.pk,
-      signature: signature,
-      outcome: Enum.at(event, outcome_idx)
-    }
-  end
+  # def resolve(event, outcome_idx, oracle, signature) do
+  #   %{
+  #     pubkey: oracle.pk,
+  #     signature: signature,
+  #     outcome: Enum.at(event, outcome_idx)
+  #   }
+  # end
 
-  def get_secret_from_resolution(%{signature: %{s: s}}), do: PrivateKey.new(s)
-
-  # SERIALIZERS
-  @msg_type_oracle_event 55330
-  @msg_type_oracle_announcement 55332
-  def serialize_announcement(signature, pubkey, event) do
-    {:ok, ser_event} = Oracle.serialize(event)
-
-    <<@msg_type_oracle_announcement>> <>
-      Signature.serialize_signature() <> Point.x_bytes(pubkey) <> ser_event
-  end
+  # def get_secret_from_resolution(%{signature: %{s: s}}), do: PrivateKey.new(s)
 end
