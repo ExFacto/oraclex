@@ -10,6 +10,11 @@ import Config
 config :oraclex,
   ecto_repos: [Oraclex.Repo]
 
+# Configures the pk type for migrations
+config :oraclex, Oraclex.Repo,
+  migration_primary_key: [type: :uuid],
+  migration_timestamps: [type: :naive_datetime_usec]
+
 # Configures the endpoint
 config :oraclex, OraclexWeb.Endpoint,
   url: [host: "localhost"],

@@ -10,7 +10,14 @@ defmodule Oraclex.MixProject do
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -33,6 +40,7 @@ defmodule Oraclex.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # Default dependencies
       {:phoenix, "~> 1.6.15"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
@@ -49,9 +57,12 @@ defmodule Oraclex.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+      # Extended dependencies
       {:poison, "~> 5.0"},
       {:bitcoinex,
-       github: "SachinMeier/bitcoinex", branch: "sachin--add-key-only-taproot-script-creation"}
+       github: "SachinMeier/bitcoinex", branch: "sachin--add-key-only-taproot-script-creation"},
+      {:excoveralls, "~> 0.16.0", only: :test},
+      {:mock, "~> 0.3.7", only: :test}
     ]
   end
 
