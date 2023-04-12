@@ -3,3 +3,6 @@
 priv
 
 /client/oracle_client/burrito_out/
+
+# ignore IDE files
+*.idea
