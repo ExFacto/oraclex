@@ -6,3 +6,5 @@ priv
 
 # ignore IDE files
 *.idea
+*.DS_Store
+

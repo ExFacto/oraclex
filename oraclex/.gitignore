@@ -32,3 +32,8 @@ oraclex-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Ignore local dev files
+/_backup
+/_backup_tailwind
+.DS_Store
+
