@@ -50,8 +50,8 @@ defmodule Oraclex.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:poison, "~> 5.0"},
-      {:bitcoinex,
-       github: "SachinMeier/bitcoinex", branch: "sachin--add-key-only-taproot-script-creation"},
+      {:bitcoinex, github: "SachinMeier/bitcoinex", branch: "master"},
+      {:exfacto, github: "exfacto/exfacto", branch: "master"},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev}
     ]
   end

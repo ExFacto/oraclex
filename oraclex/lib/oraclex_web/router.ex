@@ -17,7 +17,12 @@ defmodule OraclexWeb.Router do
   scope "/", OraclexWeb do
     pipe_through(:browser)
 
-    get("/", PageController, :index)
+    # redirec to /events
+    get("/events", EventController, :list)
+
+    get("/events/new", EventController, :new)
+
+    post("/events/new", EventController, :create)
   end
 
   # Other scopes may use custom stacks.
