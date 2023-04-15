@@ -3,6 +3,13 @@ defmodule OraclexWeb.EventView do
   use Phoenix.HTML
 
   alias OraclexWeb.ComponentsView
+  # TODO is this bad?
+  import Plug.Conn
+
+  def assign_event(conn, event) do
+    conn
+    |> assign(:event, event)
+  end
 
   def array_add_button(form, field) do
     id = Phoenix.HTML.Form.input_id(form, field) <> "_container"
@@ -32,10 +39,11 @@ defmodule OraclexWeb.EventView do
     type = Phoenix.HTML.Form.input_type(form, field)
     name = Phoenix.HTML.Form.input_name(form, field) <> "[]"
     input_opts = Keyword.put_new(input_opts, :name, name)
-    content_tag :li do
+    input_opts = Keyword.put_new(input_opts, :class, "form-field-input form-field-input-list-text")
+    content_tag :li, class: "form-field-input-list" do
       [
         apply(Phoenix.HTML.Form, type, [form, field, input_opts]),
-        link("Remove", to: "#", data: data, title: "Remove", class: "form-list-remove-field")
+        link("X", to: "#", data: data, title: "Remove", class: "form-list-remove-field")
       ]
     end
   end

@@ -1,0 +1,24 @@
+<div class="event-summary">
+    <h1>Event <%= @event.name %></h1>
+    <p>UID: <%= @event.uid %></p>
+    <%# convert maturity to nice datetime %>
+    <p>Maturity: <%= @event.maturity %></p>
+</div>
+
+<%= form_for @resolution, Routes.resolution_path(@conn, :create), [class: "css-classes-here"], fn f -> %>
+    <div>
+        <%= hidden_input f, :event_id, value: @event.id %>
+    </div>
+
+    <div class="form">
+        <div class="form-resolution-outcome-selection">
+            <%= label f, :outcome, "Outcomes", class: "form-field-select" %>
+            <%= select f, :outcome, @event.outcomes, prompt: "Select Outcome", selected: @outcome, class: "form-field-input" %>
+        </div>
+        <br/>
+        <div class="form-submit">
+            <%= submit "Create Event", class: "form-submit-button" %>
+        </div>
+    </div>
+
+<% end %>

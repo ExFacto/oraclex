@@ -1,0 +1,37 @@
+<%= attestation = Map.get(@event, :attestation); if attestation != nil do %>
+    <%= for outcome <- @event.outcomes do %>
+        <%= if attestation.outcome == outcome do %>
+        <div class="mb-4 flex items-center w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 event-result" role="alert">
+            <div class="text-sm font-normal">
+               <%= outcome %>
+            </div>
+
+            <div class="flex items-center ml-auto space-x-2">
+                <%# TODO putting event in assigns doesn't work %>
+                <p class="event-result-result">RESULT</p>
+            </div>
+        </div>
+        <% else %>
+            <div class="mb-4 flex items-center w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div class="text-sm font-normal">
+               <%= outcome %>
+            </div>
+        </div>
+        <% end %>
+    <% end %>
+<% else %>
+    <p class=" mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Choose one of the following outcomes.
+    </p>
+    <%= for outcome <- @event.outcomes do %>
+        <div class="mb-4 flex items-center w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+            <div class="text-sm font-normal">
+               <%= outcome %>
+            </div>
+            <div class="flex items-center ml-auto space-x-2">
+                <%# TODO putting event in assigns doesn't work %>
+                <%= link "Resolve", to: Routes.resolution_path(assign_event(@conn, @event), :new, event_id: @event.id, outcome: outcome) %>
+            </div>
+        </div>
+    <% end %>
+<% end %>

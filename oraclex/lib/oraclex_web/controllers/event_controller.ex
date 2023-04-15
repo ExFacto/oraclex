@@ -25,4 +25,9 @@ defmodule OraclexWeb.EventController do
     announcements = Oraclex.Announcement.get_all_announcements()
     render(conn, "list.html", events: announcements)
   end
+
+  def assign_event(conn, event) do
+    conn
+    |> assign(:event, event)
+  end
 end

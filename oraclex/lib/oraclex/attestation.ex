@@ -1,6 +1,7 @@
 defmodule Oraclex.Attestation do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Oraclex.Repo
 
   alias ExFacto.{Oracle}
   alias Bitcoinex.Secp256k1.Signature
@@ -21,25 +22,25 @@ defmodule Oraclex.Attestation do
     |> validate_required([:outcome, :signatures])
   end
 
-  def create_attestation(o = %Oracle{}, announcement_uid, outcome) do
-    case Repo.get_by(Oraclex.Announcement, uid: announcement_uid) do
+  def empty_changeset() do
+    changeset(%__MODULE__{}, %{})
+  end
+
+  def create_attestation(o = %Oracle{}, resolution = %{
+    "event_id" => announcement_id,
+    "outcome" => outcome
+    }) do
+    case Repo.get_by(Oraclex.Announcement, id: String.to_integer(announcement_id)) do
       nil ->
         {:error, "announcement not found"}
 
       announcement ->
         if Enum.member?(announcement.outcomes, outcome) do
-          signature =
-            Oracle.sign_outcome(o.sk, outcome)
-            |> Signature.to_hex()
+          {:ok, signature} = Oracle.sign_outcome(o.sk, outcome)
+          sig_hex = Signature.to_hex(signature)
 
-          changeset(
-            %__MODULE__{},
-            %{
-              "outcome" => outcome,
-              "signatures" => [signature],
-              "announcement_id" => announcement.uid
-            }
-          )
+          Ecto.build_assoc(announcement, :attestation, outcome: outcome, signatures: [sig_hex])
+          |> Repo.insert!()
         end
     end
   end

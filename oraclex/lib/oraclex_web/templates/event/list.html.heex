@@ -7,10 +7,6 @@
         <%= ComponentsView.render "cta_new_event.html" %>
         <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">We enable easy creation and execution of DLCs</h1>
         <p class="text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">A Discreet Log Contract (DLC) is a form of Bitcoin transaction which uses an oracle to execute a smart contract. Start by creating a new event or attesting a current one.</p>
-                    <div class="w-full">
-                    <svg class="w-12 h-12 mx-auto rotate-90" fill="#cccccc" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    </div>
-
 
         <!--
         <div class="flex flex-col mb-8 space-y-4 lg:mb-16 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
@@ -33,7 +29,7 @@
         <div id="accordion-collapse" data-accordion="collapse">
             <p><%= length(@events) %></p>
             <%= for event <- @events do %>
-                <%= render "event.html", event: event %>
+                <%= render "event.html", conn: @conn, event: event %>
             <% end %>
         </div>
     </div>

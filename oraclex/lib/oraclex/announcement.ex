@@ -17,6 +17,8 @@ defmodule Oraclex.Announcement do
     field :private_nonces, {:array, :string}
     field :signature, :string
 
+    has_one :attestation, Oraclex.Attestation
+
     timestamps(type: :utc_datetime_usec)
   end
 
@@ -92,6 +94,16 @@ defmodule Oraclex.Announcement do
     {Oracle.sign_event(o, event), nonce_sk}
   end
 
+  def get_announcement(id) do
+    query = from(a in __MODULE__,
+      where: a.id == ^id,
+      select: a
+    )
+    query
+    |> Repo.one()
+    # |> Repo.preload(:attestation)
+  end
+
   def get_all_announcements() do
     query = from(a in __MODULE__,
       order_by: [desc: a.inserted_at],
@@ -100,5 +112,6 @@ defmodule Oraclex.Announcement do
     # __MODULE__
     query
     |> Repo.all()
+    |> Repo.preload(:attestation)
   end
 end
