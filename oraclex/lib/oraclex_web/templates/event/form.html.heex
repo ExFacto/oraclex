@@ -1,0 +1,31 @@
+<%= form_for @event, Routes.event_path(@conn, :create), [class: "css-classes-here"], fn f -> %>
+    <div class="form-field-text">
+        <div class="form-field">
+            <%= label f, :name, "Event Name", class: "form-field-text-label" %>
+            <%= text_input f, :name, class: "form-field-text-input" %>
+            <%= error_tag f, :name %>
+        </div>
+
+        <div class="form-field">
+            <%= label f, :description, "Description", class: "form-field-text-label" %>
+            <%= text_input f, :description, class: "form-field-text-input" %>
+            <%= error_tag f, :description %>
+        </div>
+
+        <div class="form-field">
+            <%= label f, :maturity, "Earliest Resolution Time", class: "form-field-datetime-label" %>
+            <%= datetime_local_input f, :maturity, class: "form-field-datetime-input" %>
+            <%= error_tag f, :maturity %>
+        </div>
+
+        <div class="form-field">
+            <%= label f, :outcomes, "Outcomes", class: "form-field-list-label" %>
+            <%= array_input f, :outcomes %>
+            <%= array_add_button f, :outcomes %>
+        </div>
+        <br />
+        <div class="form-submit">
+            <%= submit "Create Event", class: "form-submit-button" %>
+        </div>
+    </div>
+<% end %>

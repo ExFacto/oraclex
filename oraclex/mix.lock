@@ -1,5 +1,5 @@
 %{
-  "bitcoinex": {:git, "https://github.com/SachinMeier/bitcoinex.git", "9c67b08854ce76dd9c8a9365f92113de70c4aca5", [branch: "master"]},
+  "bitcoinex": {:git, "https://github.com/SachinMeier/bitcoinex.git", "b9f64821e149d6dd9776c5789c0865d0a57e30ce", [branch: "master"]},
   "castore": {:hex, :castore, "1.0.0", "c25cd0794c054ebe6908a86820c8b92b5695814479ec95eeff35192720b71eec", [:mix], [], "hexpm", "577d0e855983a97ca1dfa33cbb8a3b6ece6767397ffb4861514343b078fc284b"},
   "certifi": {:hex, :certifi, "2.9.0", "6f2a475689dd47f19fb74334859d460a2dc4e3252a3324bd2111b8f0429e7e21", [:rebar3], [], "hexpm", "266da46bdb06d6c6d35fde799bcb28d36d985d424ad7c08b5bb48f5b5cdd4641"},
   "combine": {:hex, :combine, "0.10.0", "eff8224eeb56498a2af13011d142c5e7997a80c8f5b97c499f84c841032e429f", [:mix], [], "hexpm", "1b1dbc1790073076580d0d1d64e42eae2366583e7aecd455d1215b0d16f2451b"},

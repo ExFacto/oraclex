@@ -44,3 +44,33 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// logic for adding and removing form items for Event Creation
+window.onload = () => {
+    eachSelected(".form-list-remove-field", (el) => el.onclick = removeItem);
+    eachSelected(".form-list-add-field", (el) => el.onclick = addItem);
+}
+
+const eachSelected = (selector, callback) => {
+    Array.prototype.forEach.call(document.querySelectorAll(selector), callback);
+};
+
+const addItem = ({target: {dataset}}) => {
+    let container = document.getElementById(dataset.container);
+    let count = document.children.length;
+    container.insertAdjacentHTML('beforeend', dataset.blueprint);
+    let newItem = container.lastChild;
+    newItem.lastChild.onclick = removeItem;
+    newItem.firstChild.dataset.index = count;
+    newItem.firstChild.id += `_${count}`;
+    newItem.firstChild.focus();
+}
+
+const removeItem = (event) => {
+    let index = event.target.dataset.index;
+    let li = event.target.parentNode;
+    let ol = li.parentNode;
+    ol.removeChild(li);
+    Array.prototype.forEach.call(ol.children   , (li, i) => {
+        li.firstChild.dataset.index = i;
+    });
+}
