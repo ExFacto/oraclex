@@ -8,6 +8,8 @@ defmodule Oraclex.Announcement do
   alias ExFacto.{Event, Oracle}
   alias Bitcoinex.Secp256k1.{PrivateKey, Signature}
 
+  @min_outcomes 1
+
   schema "announcements" do
     field :uid, :string
     field :name, :string
@@ -44,13 +46,31 @@ defmodule Oraclex.Announcement do
       :signature
     ])
     |> validate_length(:private_nonces, is: 1)
-    |> validate_length(:outcomes, min: 1)
     |> validate_length(:signature, is: 128)
     |> validate_length(:uid, is: 64)
     |> validate_length(:name, min: 6, max: 64)
     |> validate_length(:description, min: 6, max: 256)
+    |> validate_length(:outcomes, min: 1)
+    |> validate_unique_outcomes()
 
     # TODO validate lengths
+  end
+
+  def validate_unique_outcomes(changeset) do
+    validate_change(changeset, :outcomes, fn :outcomes, outcomes ->
+      cond do
+        length(outcomes) < @min_outcomes ->
+          [outcomes: "must have at least #{@min_outcomes} outcomes"]
+        !ensure_unique_outcomes(outcomes) ->
+          [outcomes: "outcomes must be unique"]
+        true ->
+          []
+      end
+    end)
+  end
+
+  defp ensure_unique_outcomes(outcomes) do
+    length(Enum.uniq(outcomes)) == length(outcomes)
   end
 
   def empty_changeset() do
@@ -64,7 +84,6 @@ defmodule Oraclex.Announcement do
         "maturity" => maturity
       }) do
         # correct for weird browser time fmt
-    {:ok, maturity, _} = DateTime.from_iso8601(maturity <> ":00Z")
     {%{announcement: announcement}, nonce_sk} = new_announcement(o, outcomes, maturity)
 
     nonce_hex = PrivateKey.to_hex(nonce_sk)
@@ -82,7 +101,7 @@ defmodule Oraclex.Announcement do
         "signature" => sig_hex
       }
     )
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   # @spec new_announcement(Oracle.t(), list(String.t()), DateTime.t()) :: Oraclex.Announcement.t()

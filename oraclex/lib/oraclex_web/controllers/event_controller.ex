@@ -13,11 +13,20 @@ defmodule OraclexWeb.EventController do
   }}) do
     o = Oraclex.Oracle.load_oracle()
     # validate maturity here??
-    announcement = Oraclex.Announcement.create_announcement(o, announcement)
-
-    conn
-    |> put_flash(:info, "Announcement created successfully.")
-    |> redirect(to: Routes.event_path(conn, :list))
+    {:ok, maturity, _} = DateTime.from_iso8601(maturity <> ":00Z")
+    announcement = Map.put(announcement, "maturity", maturity)
+    case Oraclex.Announcement.create_announcement(o, announcement) do
+      {:ok, announcement} ->
+        conn
+        |> assign_event(announcement)
+        # |> put_flash(:info, "Announcement created successfully.")
+        |> redirect(to: Routes.event_path(conn, :list))
+      {:error, changeset} ->
+        conn
+        |> assign_event(changeset)
+        |> put_flash(:error, "Failed to create announcement.")
+        |> render("new.html")
+    end
   end
 
 
