@@ -1,0 +1,26 @@
+<!-- for reference
+    <h1><%= gettext "Welcome to %{name}!", name: "Oraclex" %></h1>
+-->
+
+<section class="bg-white dark:bg-gray-900">
+    <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12">
+        <%# ComponentsView.render "cta_new_event.html" %>
+        <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
+            Oraclex
+        </h1>
+        <p class="text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+            Create Events and Resolutions, enabling users to build DLCs on real-world events!
+        </p>
+    </div>
+</section>
+
+<section class="bg-white dark:bg-gray-900">
+    <div class="items-center max-w-screen-xl gap-16 px-4 py-8 mx-auto lg:grid lg:grid-cols-1 lg:py-16 lg:px-6">
+        <div id="accordion-collapse" data-accordion="collapse">
+            <p><%= length(@events) %></p>
+            <%= for event <- @events do %>
+                <%= render "event.html", conn: @conn, event: event %>
+            <% end %>
+        </div>
+    </div>
+</section>

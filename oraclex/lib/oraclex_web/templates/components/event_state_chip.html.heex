@@ -1,0 +1,9 @@
+<%= if @attestation != nil do %>
+    <div class="event-state event-state-settled">
+        <p class="event-state-settled">Settled</p>
+    </div>
+<% else %>
+    <div class="event-state event-state-open">
+        <p class="event-state-open">Open</p>
+    </div>
+<% end %>

@@ -1,6 +1,5 @@
 // We import the CSS which is extracted to its own file by esbuild.
 // Remove this line if you add a your own CSS build pipeline (e.g postcss).
-import "../css/app.css"
 
 // If you want to use Phoenix channels, run `mix help phx.gen.channel`
 // to get started and then uncomment the line below.
@@ -21,10 +20,12 @@ import "../css/app.css"
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
+import "flowbite/dist/flowbite.phoenix.js";
 // Establish Phoenix Socket and LiveView configuration.
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
@@ -43,3 +44,33 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// logic for adding and removing form items for Event Creation
+window.onload = () => {
+    eachSelected(".form-list-remove-field", (el) => el.onclick = removeItem);
+    eachSelected(".form-list-add-field", (el) => el.onclick = addItem);
+}
+
+const eachSelected = (selector, callback) => {
+    Array.prototype.forEach.call(document.querySelectorAll(selector), callback);
+};
+
+const addItem = ({target: {dataset}}) => {
+    let container = document.getElementById(dataset.container);
+    let count = document.children.length;
+    container.insertAdjacentHTML('beforeend', dataset.blueprint);
+    let newItem = container.lastChild;
+    newItem.lastChild.onclick = removeItem;
+    newItem.firstChild.dataset.index = count;
+    newItem.firstChild.id += `_${count}`;
+    newItem.firstChild.focus();
+}
+
+const removeItem = (event) => {
+    let index = event.target.dataset.index;
+    let li = event.target.parentNode;
+    let ol = li.parentNode;
+    ol.removeChild(li);
+    Array.prototype.forEach.call(ol.children   , (li, i) => {
+        li.firstChild.dataset.index = i;
+    });
+}

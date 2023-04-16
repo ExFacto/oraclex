@@ -1,0 +1,34 @@
+<div class="event-options">
+    <div class="event-options-announcement">
+        <div class="event-options-title">
+            <h3>Announcement</h3>
+        </div>
+        <%# Clipboard %>
+        <a href="#">
+            Copy Announcement to Clipboard
+        </a>
+            <br/>
+
+        <%# NOSTR %>
+        <a href="#">
+            Post Announcement to Nostr
+        </a>
+    </div>
+
+    <%= attestation = Map.get(@event, :attestation); if attestation != nil do %>
+        <div class="event-options-attestation">
+            <div class="event-options-title">
+                <h3>Attestation</h3>
+            </div>
+            <%# Clipboard %>
+            <a href="#">
+                Copy Attestation to Clipboard
+            </a>
+            <br/>
+            <%# NOSTR %>
+            <a href="#">
+                Post Attestation to Nostr
+            </a>
+        </div>
+    <% end %>
+</div>
