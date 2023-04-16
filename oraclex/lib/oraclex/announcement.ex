@@ -43,6 +43,12 @@ defmodule Oraclex.Announcement do
       :maturity,
       :signature
     ])
+    |> validate_length(:private_nonces, is: 1)
+    |> validate_length(:outcomes, min: 1)
+    |> validate_length(:signature, is: 128)
+    |> validate_length(:uid, is: 64)
+    |> validate_length(:name, min: 6, max: 64)
+    |> validate_length(:description, min: 6, max: 256)
 
     # TODO validate lengths
   end
