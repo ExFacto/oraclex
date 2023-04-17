@@ -18,8 +18,8 @@
     <div class="items-center max-w-screen-xl gap-16 px-4 py-8 mx-auto lg:grid lg:grid-cols-1 lg:py-16 lg:px-6">
         <div id="accordion-collapse" data-accordion="collapse">
             <p><%= length(@events) %></p>
-            <%= for event <- @events do %>
-                <%= render "event.html", conn: @conn, event: event %>
+            <%= for {event, i} <- Enum.with_index(@events) do %>
+                <%= render "event.html", conn: @conn, event: event, i: i+1 %>
             <% end %>
         </div>
     </div>

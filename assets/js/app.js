@@ -46,6 +46,9 @@ window.liveSocket = liveSocket
 
 // logic for adding and removing form items for Event Creation
 window.onload = () => {
+    // event list: collapse and expand items
+    eachSelected(".event-list-item", (el) => el.onclick = toggleItem);
+    // event creation: add and remove items from the outcome list
     eachSelected(".form-list-remove-field", (el) => el.onclick = removeItem);
     eachSelected(".form-list-add-field", (el) => el.onclick = addItem);
 }
@@ -53,6 +56,10 @@ window.onload = () => {
 const eachSelected = (selector, callback) => {
     Array.prototype.forEach.call(document.querySelectorAll(selector), callback);
 };
+
+// const toggleItem = (event) => {
+//     let collapsible = event.target.
+// }
 
 const addItem = ({target: {dataset}}) => {
     let container = document.getElementById(dataset.container);

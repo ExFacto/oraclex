@@ -63,4 +63,12 @@ defmodule Oraclex.Utils do
     |> :crypto.strong_rand_bytes()
     |> Base.encode16(case: :lower)
   end
+
+  def hex_to_int(data) do
+    Base.decode16!(data, case: :lower) |> :binary.decode_unsigned()
+  end
+
+  def int_to_hex(data) do
+    :binary.encode_unsigned(data) |> Base.encode16(case: :lower)
+  end
 end

@@ -3,7 +3,7 @@ defmodule Oraclex.Announcement do
   import Ecto.Changeset
 
   import Ecto.Query, warn: false
-  alias Oraclex.Repo
+  alias Oraclex.{Repo, Utils}
 
   alias ExFacto.{Event, Oracle}
   alias Bitcoinex.Secp256k1.{PrivateKey, Signature}
@@ -127,6 +127,32 @@ defmodule Oraclex.Announcement do
     query
     |> Repo.one()
     # |> Repo.preload(:attestation)
+  end
+
+  def to_exfacto_announcement(announcement) do
+        {:ok, sig} = Signature.parse_signature(announcement.signature)
+        public_key = Oraclex.get_point()
+        nonce_points = nonce_privkeys_to_points(announcement.private_nonces)
+        descriptor = Event.new_event_descriptor(announcement.outcomes)
+        maturity = DateTime.to_unix(announcement.maturity)
+        event = Event.new(announcement.uid, nonce_points, descriptor, maturity)
+        Oracle.Announcement.new(sig, public_key, event)
+  end
+
+  def serialize(announcement) do
+    # TODO
+  end
+
+
+
+  defp nonce_privkeys_to_points(nonce_privkeys) do
+    Enum.map(nonce_privkeys, fn nonce_privkey ->
+      {:ok, nonce_sk} =
+        nonce_privkey
+        |> Utils.hex_to_int()
+        |> PrivateKey.new()
+      PrivateKey.to_point(nonce_sk)
+    end)
   end
 
   def get_all_announcements() do

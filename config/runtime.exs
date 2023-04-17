@@ -8,6 +8,8 @@ import Config
 # The block below contains prod specific runtime configuration.
 
 # ## Using releases
+config :oraclex,
+  private_key: System.fetch_env!("ORACLEX_PRIVATE_KEY")
 #
 # If you use `mix release`, you need to explicitly enable the server
 # by passing the PHX_SERVER=true when you start it:

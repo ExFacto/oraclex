@@ -1,7 +1,10 @@
 <%# always visible %>
 <div style="display: flex; ">
-    <button type="button" class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true" aria-controls="accordion-collapse-body-1">
-        <h2 id="accordion-collapse-heading-1"><%= @event.name %></h2>
+    <button type="button" class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+        data-accordion-target={"#accordion-collapse-body-#{@i}"}
+        aria-expanded="true"
+        aria-controls={"accordion-collapse-body-#{@i}"}>
+        <h2 id={"accordion-collapse-heading-#{@i}"}><%= @event.name %></h2>
         <div class="flex items-center justify-between">
             <div class="event-state">
                 <%= ComponentsView.render "event_state_chip.html", attestation: Map.get(@event, :attestation) %>
@@ -12,11 +15,10 @@
 </div>
 
 <%# collapsible %>
-<div id="accordion-collapse-body-1" class="hidden" aria-labelledby="accordion-collapse-heading-1">
+<div id={"accordion-collapse-body-#{@i}"} class="hidden" aria-labelledby={"accordion-collapse-heading-#{@i}"}>
     <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
         <div class="grid grid-cols-2 gap-12 sm:gap-12 sm:grid-cols-2">
             <div>
-                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white"><%= @event.name %></h2>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     <%= @event.description %>
                 </p>

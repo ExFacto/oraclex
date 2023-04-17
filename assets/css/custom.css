@@ -1,7 +1,5 @@
-.background {
-    width: 100%;
-    height: 100%;
-    background-color: rgb(17, 24, 39)
+body {
+    background-color: rgb(17, 24, 39);
 }
 
 .body-title {
@@ -120,4 +118,23 @@
     border-radius: 5px;
     background-color: rgb(50,	99,	233)	;
     color: #fff;
+}
+
+/* Event List */
+.event-item-item {
+    display: flex;
+}
+
+.settings-wrapper {
+    height: fill-available;
+    padding: 20px 0;
+    max-width: 600px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+.footer {
+    position: relative;
+    width: 100%;
+    bottom: 0;
 }
