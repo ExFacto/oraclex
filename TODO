@@ -1,16 +1,21 @@
 Front-end tasks: 
-- [ ] Fix footer to bottom of screen
-- [ ] Set background for all screens so there's never white
-- [ ] Settings (export privkey, display pubkey)
+- [x] Fix footer to bottom of screen
+- [x] Set background for all screens so there's never white
+- [ ] Settings Spacing
 - [ ] Fix x button to remove list item
 - [ ] Transition to Purple scheme
 - [ ] Make it responsive to various sizes (no need for mobile)
+- [ ] fix border of Events list items
+- [ ] Make Resolve look like button
 
 Backend Oracle tasks: 
 - [ ] RSS feed
-- [ ] Nostr publish Announcements & Attestations
 - [ ] Standardize events|announcements & resolution|attestation naming
 - [ ] testing, find edge cases
+- [ ] check for bad privkey on app startup
+- [ ] Nostr library 
+- [ ] Post to Nostr
+- [ ] serialize Announcement for copy & post
 
 
 Problems: 
