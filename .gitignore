@@ -1,6 +1,7 @@
 .env
 .elixir_ls
-priv
+priv/static/
+priv/gettext/
 
 /client/oracle_client/burrito_out/
 

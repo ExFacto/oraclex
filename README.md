@@ -1,13 +1,20 @@
 # Oraclex
 
+## Prerequisites
+
+1. Erlang & Elixir
+  -  https://www.pluralsight.com/guides/installing-elixir-erlang-with-asdf 
+  - Check `.tool-versions` for the correct versions to install
+2. Postgres
+  - https://www.postgresql.org/download/
+
 ## First Time Setup
-1. Install Postgres, ensure it is exposed at port `5432` and that the `postgres` users exists
-2. If the password for the `postgres` user is not `postgres`, put the password in `config/dev.exs`:
+1. Ensure your postgres details in `config/dev.exs` are correct and Postgres is exposed at port `5432`:
 ```
 config :oraclex, Oraclex.Repo,
-  username: "postgres",
+  username: "<POSTGRES_USERNAME>",
   password: "<POSTGRES_PASSWORD>",
-  hostname: "localhost",
+  hostname: "<POSTGRES_HOST>",
   database: "oraclex_dev",
 ```
 2. Log Into Postgres
