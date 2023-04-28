@@ -44,13 +44,15 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
-// logic for adding and removing form items for Event Creation
 window.onload = () => {
     // event list: collapse and expand items
     eachSelected(".event-list-item", (el) => el.onclick = toggleItem);
     // event creation: add and remove items from the outcome list
     eachSelected(".form-list-remove-field", (el) => el.onclick = removeItem);
     eachSelected(".form-list-add-field", (el) => el.onclick = addItem);
+    // event & resolution copy to clipboard
+    eachSelected(".event-copy-to-clipboard", (el) => el.onclick = copyEventToClipboard(el.id));
+    eachSelected(".resolution-copy-to-clipboard", (el) => el.onclick = copyResolutionToClipboard(el.id));
 }
 
 const eachSelected = (selector, callback) => {
@@ -80,4 +82,27 @@ const removeItem = (event) => {
     Array.prototype.forEach.call(ol.children   , (li, i) => {
         li.firstChild.dataset.index = i;
     });
+}
+
+// Copy to Clipboard functionality
+
+const copyEventToClipboard = (eventId) => {
+    let index = eventId.split("event-")[1];
+    let targetId = "event-hex-" + index;
+    let target = document.getElementById(targetId);
+    copyToClipboard(target);
+}
+
+const copyResolutionToClipboard = (eventId) => {
+    let index = eventId.split("resolution-")[1];
+    let targetId = "resolution-hex-" + index;
+    let target = document.getElementById(targetId);
+    copyToClipboard(target);
+}
+
+const copyToClipboard = (data) => {
+    data.select();
+    // data.getSelectionRange(0, 99999);
+    navigator.clipboard.writeText(data.value);
+    // TODO add alert copied to clipboard
 }

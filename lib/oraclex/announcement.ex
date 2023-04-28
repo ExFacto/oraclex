@@ -5,6 +5,7 @@ defmodule Oraclex.Announcement do
   import Ecto.Query, warn: false
   alias Oraclex.{Repo, Utils}
 
+  alias ExFacto
   alias ExFacto.{Event, Oracle}
   alias Bitcoinex.Secp256k1.{PrivateKey, Signature}
 
@@ -70,7 +71,8 @@ defmodule Oraclex.Announcement do
   end
 
   defp ensure_unique_outcomes(outcomes) do
-    length(Enum.uniq(outcomes)) == length(outcomes)
+    normalized_outcomes = Enum.map(outcomes, &String.normalize(&1, :nfc))
+    length(Enum.uniq(normalized_outcomes)) == length(outcomes)
   end
 
   def empty_changeset() do
@@ -139,11 +141,24 @@ defmodule Oraclex.Announcement do
         Oracle.Announcement.new(sig, public_key, event)
   end
 
+  @spec serialize(__MODULE__) :: binary
   def serialize(announcement) do
-    # TODO
+    Oracle.Announcement.serialize(to_exfacto_announcement(announcement))
   end
 
+  @spec to_hex(__MODULE__) :: binary
+  def to_hex(announcement) do
+    announcement
+    |> serialize()
+    |> Base.encode16(case: :lower)
+  end
 
+  @spec to_base64(__MODULE__) :: binary
+  def to_base64(announcement) do
+    announcement
+    |> serialize()
+    |> Base.encode64()
+  end
 
   defp nonce_privkeys_to_points(nonce_privkeys) do
     Enum.map(nonce_privkeys, fn nonce_privkey ->

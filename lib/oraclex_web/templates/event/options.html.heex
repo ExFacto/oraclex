@@ -1,34 +1,37 @@
 <div class="event-options">
-    <div class="event-options-announcement">
+    <div class="event-options-event">
         <div class="event-options-title">
-            <h3>Announcement</h3>
+            <h3>Event</h3>
         </div>
         <%# Clipboard %>
-        <a href="#">
+        <input type="hidden" id={"event-hex-#{@i}"} value={Oraclex.Announcement.to_hex(@event)}>
+        <button id={"event-#{@i}"} class="event-copy-to-clipboard">
             Copy to Clipboard
-        </a>
+        </button>
             <br/>
 
         <%# NOSTR %>
-        <a href="#">
+        <button href="#">
             Post to Nostr
-        </a>
+        </button>
     </div>
 
-    <%= attestation = Map.get(@event, :attestation); if attestation != nil do %>
-        <div class="event-options-attestation">
+    <%= resolution = Map.get(@event, :attestation); if resolution != nil do %>
+        <div class="event-options-resolution">
             <div class="event-options-title">
-                <h3>Attestation</h3>
+                <h3>Resolution</h3>
             </div>
             <%# Clipboard %>
-            <a href="#">
+            <input type="hidden" id={"resolution-hex-#{@i}"} value={Oraclex.Attestation.to_hex(@event)}>
+            <button id={"resolution-#{@i}"} class="resolution-copy-to-clipboard">
                 Copy to Clipboard
-            </a>
+                <%# TODO add icon %>
+            </button>
             <br/>
             <%# NOSTR %>
-            <a href="#">
+            <button href="#">
                 Post to Nostr
-            </a>
+            </button>
         </div>
     <% end %>
 </div>

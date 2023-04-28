@@ -22,7 +22,7 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     <%= @event.description %>
                 </p>
-                <%= render "options.html", conn: @conn, event: @event %>
+                <%= render "options.html", conn: @conn, event: @event, i: @i %>
             </div>
             <div class="row-span-2">
                 <h2 class="text-sm font-semibold text-gray-900 uppercase dark:text-white">Outcomes</h2>

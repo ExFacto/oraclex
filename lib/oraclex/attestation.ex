@@ -45,5 +45,39 @@ defmodule Oraclex.Attestation do
     end
   end
 
+  def to_exfacto_attestation(announcement = %{uid: uid, attestation: attestation}) do
+    pubkey = Oraclex.get_point()
+    sigs = Enum.map(attestation.signatures, fn sig_hex ->
+      {:ok, sig} = Signature.parse_signature(sig_hex)
+      sig
+    end)
+
+    %Oracle.Attestation{
+      event_id: uid,
+      public_key: pubkey,
+      signatures: sigs,
+      outcomes: [attestation.outcome]
+    }
+  end
+
+  def serialize(announcement) do
+    announcement
+    |> to_exfacto_attestation()
+    |> Oracle.Attestation.serialize()
+  end
+
+  def to_hex(announcement) do
+    announcement
+    |> serialize()
+    |> Base.encode16(case: :lower)
+  end
+
+  @spec to_base64(__MODULE__) :: binary
+  def to_base64(announcement) do
+    announcement
+    |> serialize()
+    |> Base.encode64()
+  end
+
 
 end
