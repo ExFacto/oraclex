@@ -8,7 +8,8 @@
 
             <div class="flex items-center ml-auto space-x-2">
                 <%# TODO putting event in assigns doesn't work %>
-                <p class="event-result-result">RESULT</p>
+                <span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">Result</span>
+
             </div>
         </div>
         <% else %>
@@ -28,9 +29,9 @@
             <div class="text-sm font-normal">
                <%= outcome %>
             </div>
-            <div class="flex items-center ml-auto space-x-2">
+            <div class="flex items-center ml-auto space-x-2 event--resolve-link">
                 <%# TODO putting event in assigns doesn't work %>
-                <%= link "Resolve", to: Routes.resolution_path(assign_event(@conn, @event), :new, event_id: @event.id, outcome: outcome) %>
+                <%= link "Resolve", class: "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-full text-sm px-4 py-2 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700", to: Routes.resolution_path(assign_event(@conn, @event), :new, event_id: @event.id, outcome: outcome) %>
             </div>
         </div>
     <% end %>
