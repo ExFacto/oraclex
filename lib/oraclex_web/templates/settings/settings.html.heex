@@ -4,9 +4,9 @@
         <div class="w-20 bg-purple-100 text-purple-800 text-xs font-medium pl-3 py-0.5 rounded-full dark:bg-purple-900 dark:text-purple-300">
             ID Pubkey
         </div>
-        <div class="break-words ml-1" id="pubkey"><%= @pubkey %></div>
+        <div class="break-words ml-1"><%= @pubkey %></div>
         <!-- TODO: Copy to clipboard logic-->
-        <button id={"#"} class="event-copy-to-clipboard mt-2 flex items-center block w-36 p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <button id="#" data-any={@pubkey} class="data-copy-to-clipboard mt-2 flex items-center block w-36 p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <svg fill="#ffffff" xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 96 960 960" width="15"><path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z"/></svg>
             <p class="text-xs ml-1">Copy to clipboard</p>
         </button>
