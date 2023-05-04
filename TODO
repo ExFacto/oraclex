@@ -40,14 +40,14 @@ I dont know how:
 Optimal path:
 - Use CLI tool?
 
-ACtions:
+Actions:
 - Declare initial coin
      - Initial coin:
         - Address currently in
         - Txid:vout of coin
         - amount
 
-- Decalre funding pubkey & Amount
+- Declare funding pubkey & Amount
 
 - Declare settlement address
 
