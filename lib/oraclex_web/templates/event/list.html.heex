@@ -15,11 +15,20 @@
 </section>
 
 <section class="bg-white dark:bg-gray-900">
+    <div class="items-center max-w-screen-xl gap-4 px-4 py-8 mx-auto lg:grid lg:grid-cols-1 lg:py-4 lg:px-6">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Summary</h2>
+        <div class="relative bottom-4 bg-blue-100 text-blue-800 text-xs font-medium mr-2 mb-4 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+            <% {open, settled} = count_events_by_state(@events) %>
+            <p> Total Events: <%= length(@events) %> </p>
+            <p> Open Events: <%= open %> </p>
+            <p> Settled Events: <%= settled %> </p>
+        </div>
+    </div>
+</section>
+
+<section class="bg-white dark:bg-gray-900">
     <div class="items-center max-w-screen-xl gap-16 px-4 py-8 mx-auto lg:grid lg:grid-cols-1 lg:py-16 lg:px-6">
         <div id="accordion-collapse" data-accordion="collapse">
-            <span class="relative bottom-4 bg-blue-100 text-blue-800 text-xs font-medium mr-2 mb-4 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                There are currently <%= length(@events) %> events
-            </span>
             <%= for {event, i} <- Enum.with_index(@events) do %>
                 <%= render "event.html", conn: @conn, event: event, i: i+1 %>
             <% end %>

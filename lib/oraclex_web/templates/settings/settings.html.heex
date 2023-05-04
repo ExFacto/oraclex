@@ -1,7 +1,11 @@
 <div class="settings-wrapper mx-auto p-4">
     <h2 class="text-sm mb-4 font-semibold text-gray-900 uppercase dark:text-white">Settings</h2>
-    <span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
-        Identity Pubkey
-    </span>
-    <div class="break-words" id="pubkey"><%= @pubkey %></div>
+    <div style="display: flex; ">
+        <span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
+            Identity Pubkey
+        </span>
+        <!-- TODO: fix spacing in better way -->
+        <div class="break-words" id="pubkey"><%= @pubkey %></div>
+        <!-- TODO: Copy to clipboard -->
+    </div>
 </div>

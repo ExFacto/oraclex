@@ -1,10 +1,8 @@
 defmodule OraclexWeb.EventView do
   use OraclexWeb, :view
   use Phoenix.HTML
-
+  use Phoenix.Component
   alias OraclexWeb.ComponentsView
-  # TODO is this bad?
-  import Plug.Conn
 
   def assign_event(conn, event) do
     conn
@@ -35,6 +33,14 @@ defmodule OraclexWeb.EventView do
     end
   end
 
+  def remove_x() do
+    """
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.7071 6.70711C19.0976 6.31658 19.0976 5.68342 18.7071 5.29289C18.3166 4.90237 17.6834 4.90237 17.2929 5.29289L12 10.5858L6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.5858 12L5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L12 13.4142L17.2929 18.7071C17.6834 19.0976 18.3166 19.0976 18.7071 18.7071C19.0976 18.3166 19.0976 17.6834 18.7071 17.2929L13.4142 12L18.7071 6.70711Z" fill="#121224"/>
+    </svg>
+    """
+  end
+
   def create_li(form, field, input_opts \\ [], data \\ []) do
     type = Phoenix.HTML.Form.input_type(form, field)
     name = Phoenix.HTML.Form.input_name(form, field) <> "[]"
@@ -43,9 +49,23 @@ defmodule OraclexWeb.EventView do
     content_tag :li, class: "form-field-input-list" do
       [
         apply(Phoenix.HTML.Form, type, [form, field, input_opts]),
-        link("X", to: "#", data: data, title: "Remove", class: "text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-2 mb-2")
+        link(to: "#", data: data, title: "Remove", class: "text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-2 mb-2") do
+          remove_x()
+        end
       ]
     end
+  end
+
+  @spec count_events_by_state(list()) :: {non_neg_integer(), non_neg_integer()}
+  def count_events_by_state(events) do
+    Enum.reduce(events, {0, 0}, fn event, {open, settled} ->
+      attestation = Map.get(event, :attestation)
+      if attestation != nil do
+        {open, settled + 1}
+      else
+        {open + 1, settled}
+      end
+    end)
   end
 
 end
