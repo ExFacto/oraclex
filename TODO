@@ -16,6 +16,7 @@ Backend Oracle tasks:
 - [ ] Nostr library
 - [ ] Post to Nostr
 - [ ] serialize Announcement for copy & post
+- [ ] copy to clipboard Logic for ID pubkey in Settings
 
 
 Problems:
@@ -39,14 +40,14 @@ I dont know how:
 Optimal path:
 - Use CLI tool?
 
-ACtions:
+Actions:
 - Declare initial coin
      - Initial coin:
         - Address currently in
         - Txid:vout of coin
         - amount
 
-- Decalre funding pubkey & Amount
+- Declare funding pubkey & Amount
 
 - Declare settlement address
 
