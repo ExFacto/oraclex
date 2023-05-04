@@ -1,50 +1,50 @@
-Front-end tasks: 
+Front-end tasks:
 - [x] Fix footer to bottom of screen
 - [x] Set background for all screens so there's never white
-- [ ] Settings Spacing
-- [ ] Fix x button to remove list item
-- [ ] Transition to Purple scheme
-- [ ] Make it responsive to various sizes (no need for mobile)
-- [ ] fix border of Events list items
-- [ ] Make Resolve look like button
+- [x] Settings Spacing
+- [x] Fix x button to remove list item
+- [x] Transition to Purple scheme
+- [x] Make it responsive to various sizes (no need for mobile)
+- [x] fix border of Events list items
+- [x] Make Resolve look like button
 
-Backend Oracle tasks: 
+Backend Oracle tasks:
 - [ ] RSS feed
 - [ ] Standardize events|announcements & resolution|attestation naming
 - [ ] testing, find edge cases
 - [ ] check for bad privkey on app startup
-- [ ] Nostr library 
+- [ ] Nostr library
 - [ ] Post to Nostr
 - [ ] serialize Announcement for copy & post
 
 
-Problems: 
+Problems:
 
-Unsolvable: 
+Unsolvable:
 - We can't have users sign with any library other than bitcoinex, because no one
-can take a PSBT and create an adaptor sig from it. 
+can take a PSBT and create an adaptor sig from it.
 
 Solution: Oraclex is a wallet
 
-Build: 
+Build:
 - BIP39 (mnemonics). Use external lib?
 - Receive to key-only P2TR
-        - This simplifies max-witness length 
+        - This simplifies max-witness length
 - Send to any valid Bitcoin address
 - Determine chain from env
 
 I dont know how:
 - set up PHX web w/ CSS
 
-Optimal path: 
-- Use CLI tool? 
+Optimal path:
+- Use CLI tool?
 
 ACtions:
 - Declare initial coin
      - Initial coin:
         - Address currently in
         - Txid:vout of coin
-        - amount 
+        - amount
 
 - Decalre funding pubkey & Amount
 
