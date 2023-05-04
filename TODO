@@ -16,6 +16,7 @@ Backend Oracle tasks:
 - [ ] Nostr library
 - [ ] Post to Nostr
 - [ ] serialize Announcement for copy & post
+- [ ] copy to clipboard Logic for ID pubkey in Settings
 
 
 Problems:
