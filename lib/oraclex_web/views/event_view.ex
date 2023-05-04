@@ -1,9 +1,8 @@
 defmodule OraclexWeb.EventView do
   use OraclexWeb, :view
   use Phoenix.HTML
-  use Phoenix.Component
   alias OraclexWeb.ComponentsView
-
+  import Plug.Conn
   def assign_event(conn, event) do
     conn
     |> assign(:event, event)
