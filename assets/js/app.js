@@ -53,6 +53,9 @@ window.onload = () => {
     // event & resolution copy to clipboard
     eachSelected(".event-copy-to-clipboard", (el) => el.onclick = copyEventToClipboard(el.id));
     eachSelected(".resolution-copy-to-clipboard", (el) => el.onclick = copyResolutionToClipboard(el.id));
+
+    // arbitrary copy to clipboard
+    eachSelected(".data-copy-to-clipboard", (el) => el.onclick = copyTextToClipboard(el.getAttribute("data-any")));
 }
 
 const eachSelected = (selector, callback) => {
@@ -84,7 +87,6 @@ const removeItem = (event) => {
     });
 }
 
-// Copy to Clipboard functionality
 
 const copyEventToClipboard = (eventId) => {
     let index = eventId.split("event-")[1];
@@ -103,6 +105,10 @@ const copyResolutionToClipboard = (eventId) => {
 const copyToClipboard = (data) => {
     data.select();
     // data.getSelectionRange(0, 99999);
-    navigator.clipboard.writeText(data.value);
+    copyTextToClipboard(data.value);
     // TODO add alert copied to clipboard
+}
+
+const copyTextToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
 }

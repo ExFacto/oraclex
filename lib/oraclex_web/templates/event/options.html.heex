@@ -1,37 +1,49 @@
 <div class="event-options">
-    <div class="event-options-event">
-        <div class="event-options-title">
-            <h3>Event</h3>
-        </div>
+    <div class="text-white flex">
         <%# Clipboard %>
         <input type="hidden" id={"event-hex-#{@i}"} value={Oraclex.Announcement.to_hex(@event)}>
-        <button id={"event-#{@i}"} class="event-copy-to-clipboard">
-            Copy to Clipboard
+
+        <button id={"event-#{@i}"} class="event-copy-to-clipboard flex items-center block max-w-sm p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <svg fill="#ffffff" xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 96 960 960" width="15"><path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z"/></svg>
+            <p class="text-xs ml-1">Copy to clipboard</p>
         </button>
-            <br/>
 
         <%# NOSTR %>
-        <button href="#">
-            Post to Nostr
+        <button href="#" class="ml-2 flex items-center block max-w-sm p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <svg fill="#ffffff" xmlns="http://www.w3.org/2000/svg" height="14"  id="Layer_2" data-name="Layer 2" viewBox="0 0 82.06 147.17">
+                <g id="Layer_1-2" data-name="Layer 1">
+                    <path d="M72.66,3.33c-14.88-9.72-30.95,4.41-44.98,9.4-7.32,2.92-15.16,1.97-22.78,2.15-7.59,1.94-5.85,8.42,1.74,7.87,9.88,.63,18.79,5.97,26.92,11.61,10.73,6.2,16.88,17.04,17.05,29.43,.99,27.4-1.87,56.25-4.57,83.37,9.08-.04,19.02-.27,27.39-3.81,3.43-24.18,4.9-48.83,6.49-73.26-.93-18.86,8.96-54.31-7.26-66.77Z"/>
+                </g>
+            </svg>
+            <p class="text-xs ml-1.5">Post to nostr</p>
         </button>
     </div>
 
     <%= resolution = Map.get(@event, :attestation); if resolution != nil do %>
         <div class="event-options-resolution">
-            <div class="event-options-title">
-                <h3>Resolution</h3>
+            <h2 class="text-sm mt-8 mb-3 font-semibold text-gray-900 uppercase dark:text-white">Resolution</h2>
+
+            <div class="text-white flex">
+                <%# Clipboard %>
+                <input type="hidden" id={"resolution-hex-#{@i}"} value={Oraclex.Attestation.to_hex(@event)}>
+
+                <button id={"resolution-#{@i}"}  class="resolution-copy-to-clipboard flex items-center block max-w-sm p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <svg fill="#ffffff" xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 96 960 960" width="15"><path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z"/></svg>
+                    <p class="text-xs ml-1">Copy to clipboard</p>
+                </button>
+
+
+
+                <%# NOSTR %>
+                <button href="#" class="ml-2 flex items-center block max-w-sm p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <svg fill="#ffffff" xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 82.06 147.17">
+                        <g id="Layer_1-2" data-name="Layer 1">
+                            <path d="M72.66,3.33c-14.88-9.72-30.95,4.41-44.98,9.4-7.32,2.92-15.16,1.97-22.78,2.15-7.59,1.94-5.85,8.42,1.74,7.87,9.88,.63,18.79,5.97,26.92,11.61,10.73,6.2,16.88,17.04,17.05,29.43,.99,27.4-1.87,56.25-4.57,83.37,9.08-.04,19.02-.27,27.39-3.81,3.43-24.18,4.9-48.83,6.49-73.26-.93-18.86,8.96-54.31-7.26-66.77Z"/>
+                        </g>
+                    </svg>
+                    <p class="text-xs text-white ml-1.5">Post to nostr</p>
+                </button>
             </div>
-            <%# Clipboard %>
-            <input type="hidden" id={"resolution-hex-#{@i}"} value={Oraclex.Attestation.to_hex(@event)}>
-            <button id={"resolution-#{@i}"} class="resolution-copy-to-clipboard">
-                Copy to Clipboard
-                <%# TODO add icon %>
-            </button>
-            <br/>
-            <%# NOSTR %>
-            <button href="#">
-                Post to Nostr
-            </button>
         </div>
     <% end %>
 </div>

@@ -8,7 +8,8 @@
 
             <div class="flex items-center ml-auto space-x-2">
                 <%# TODO putting event in assigns doesn't work %>
-                <p class="event-result-result">RESULT</p>
+                <span class="bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">Result</span>
+
             </div>
         </div>
         <% else %>
@@ -20,17 +21,17 @@
         <% end %>
     <% end %>
 <% else %>
-    <p class=" mb-4 text-sm text-gray-600 dark:text-gray-400">
-        Choose one of the following outcomes.
+    <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+        Choose one of the following outcomes:
     </p>
     <%= for outcome <- @event.outcomes do %>
         <div class="mb-4 flex items-center w-full p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
             <div class="text-sm font-normal">
                <%= outcome %>
             </div>
-            <div class="flex items-center ml-auto space-x-2">
+            <div class="flex items-center ml-auto space-x-2 event--resolve-link">
                 <%# TODO putting event in assigns doesn't work %>
-                <%= link "Resolve", to: Routes.resolution_path(assign_event(@conn, @event), :new, event_id: @event.id, outcome: outcome) %>
+                <%= link "Resolve", class: "text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-xs px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900", to: Routes.resolution_path(assign_event(@conn, @event), :new, event_id: @event.id, outcome: outcome) %>
             </div>
         </div>
     <% end %>

@@ -1,9 +1,5 @@
 <%= if @attestation != nil do %>
-    <div class="event-state event-state-settled">
-        <p class="event-state-settled">Settled</p>
-    </div>
+    <span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">Settled</span>
 <% else %>
-    <div class="event-state event-state-open">
-        <p class="event-state-open">Open</p>
-    </div>
+    <span class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Open</span>
 <% end %>
